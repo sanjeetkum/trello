@@ -5,7 +5,20 @@ import Button from "../Button/Button";
 
 export default function Columns() {
   let initialColumns = {
-
+    todo: {
+      id: "todo",
+      list: [
+        { id: "todo1", cardName: "This is a card" },
+        { id: "todo2", cardName: "This is 2nd card" },
+      ],
+    },
+    done: {
+      id: "done",
+      list: [
+        { id: "done1", cardName: "This is a card" },
+        { id: "done2", cardName: "This is 2nd card" },
+      ],
+    },
   };
   const [columns, setColumns] = useState(initialColumns);
 
