@@ -5,20 +5,7 @@ import Button from "../Button/Button";
 
 export default function Columns() {
   let initialColumns = {
-    todo: {
-      id: "todo",
-      list: [
-        { id: "todo1", cardName: "This is a card" },
-        { id: "todo2", cardName: "This is 2nd card" },
-      ],
-    },
-    done: {
-      id: "done",
-      list: [
-        { id: "done1", cardName: "This is a card" },
-        { id: "done2", cardName: "This is 2nd card" },
-      ],
-    },
+
   };
   const [columns, setColumns] = useState(initialColumns);
 
@@ -100,7 +87,7 @@ export default function Columns() {
     ).map((item) => {
       if (item.id === col.id) {
         if (item.list) {
-          item.list.splice((item.list.length), 0, {id:`${item.list.length+1}`,cardName:"Enter New Card Name..."});
+          item.list.splice((item.list.length), 0, {id:`${item.id}${item.list.length+1}`,cardName:"Enter New Card Name..."});
         }
       }
     });
