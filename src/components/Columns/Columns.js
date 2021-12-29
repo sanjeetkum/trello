@@ -24,11 +24,16 @@ export default function Columns() {
 
   useEffect(() => {
     if (initialColumns) {
-      setColumns(JSON.parse(localStorage.getItem("initialColumns")) ? JSON.parse(localStorage.getItem("initialColumns")): initialColumns);
+      setColumns(
+        JSON.parse(localStorage.getItem("initialColumns"))
+          ? JSON.parse(localStorage.getItem("initialColumns"))
+          : initialColumns
+      );
     }
   }, []);
 
   const [columnName, setColumnName] = useState("");
+  const [cardName, setCardName] = useState("");
 
   const handleSave = (colId) => {
     // console.log(columnName[id]);
@@ -49,7 +54,7 @@ export default function Columns() {
   };
   const handleAddColumn = (evt) => {
     let totalColumns = "column" + (Object.keys(columns).length + 1);
-    console.log(columns)
+    console.log(columns);
     let newColumnData = {
       ...columns,
       [totalColumns]: { id: totalColumns, list: [] },
@@ -64,6 +69,32 @@ export default function Columns() {
       ...columnName,
       [evt.target.name]: value,
     });
+  };
+
+  const handleCardChange = (evt) => {
+    debugger;
+    const value = evt.target.value;
+    setCardName({
+      ...cardName,
+      [evt.target.name]: value,
+    });
+  };
+
+  const addAcard = (col, index) => {
+    Object.values(
+      columns ? columns:
+      JSON.parse(localStorage.getItem("initialColumns"))
+    ).map((item) => {
+      if (item.id === col.id) {
+        if (item.list) {
+          item.list.splice((item.list.length), 0, {id:`${item.list.length+1}`,cardName:"New Name"});
+        }
+      }
+    });
+    console.log("item2222", columns);
+
+    setColumns({ ...columns});
+    localStorage.setItem("initialColumns", JSON.stringify(columns));
   };
 
   return (
@@ -95,10 +126,17 @@ export default function Columns() {
                 </span>
               </>
             ) : (
-              <div className="columnName">{col && col.id}</div>
+              <>
+                <div className="columnName">{col && col.id}</div>
+                <u onClick={() => addAcard(col)}>Add a card...</u>
+              </>
             )}
             {col.list.map((item, index) => (
-              <Cards cardDetails={item} key={index} />
+              <Cards
+                cardDetails={item}
+                key={index}
+                handleCardChange={handleCardChange}
+              />
             ))}
           </div>
         ))}
