@@ -8,15 +8,15 @@ export default function Columns() {
     todo: {
       id: "todo",
       list: [
-        { id: "1", cardName: "This is a card" },
-        { id: "2", cardName: "This is 2nd card" },
+        { id: "todo1", cardName: "This is a card" },
+        { id: "todo2", cardName: "This is 2nd card" },
       ],
     },
     done: {
       id: "done",
       list: [
-        { id: "1", cardName: "This is a card" },
-        { id: "2", cardName: "This is 2nd card" },
+        { id: "done1", cardName: "This is a card" },
+        { id: "done2", cardName: "This is 2nd card" },
       ],
     },
   };
@@ -33,7 +33,7 @@ export default function Columns() {
   }, []);
 
   const [columnName, setColumnName] = useState("");
-  const [cardName, setCardName] = useState("");
+  // const [cardName, setCardName] = useState("");
 
   const handleSave = (colId) => {
     // console.log(columnName[id]);
@@ -71,13 +71,26 @@ export default function Columns() {
     });
   };
 
-  const handleCardChange = (evt) => {
-    debugger;
+  const handleCardChange = (item ,evt) => {
+    console.log(item)
     const value = evt.target.value;
-    setCardName({
-      ...cardName,
-      [evt.target.name]: value,
+    // setCardName({
+    //   ...cardName,
+    //   [evt.target.name]: value,
+    // });
+    Object.values(
+      columns ? columns:
+      JSON.parse(localStorage.getItem("initialColumns"))
+    ).map((col) => {
+     col && col.list.map((listItem)=>{
+      if(listItem.id === item.id){
+        listItem.cardName =  value;
+      }
+     })
     });
+    setColumns({ ...columns});
+    localStorage.setItem("initialColumns", JSON.stringify(columns));
+
   };
 
   const addAcard = (col, index) => {
@@ -87,7 +100,7 @@ export default function Columns() {
     ).map((item) => {
       if (item.id === col.id) {
         if (item.list) {
-          item.list.splice((item.list.length), 0, {id:`${item.list.length+1}`,cardName:"New Name"});
+          item.list.splice((item.list.length), 0, {id:`${item.list.length+1}`,cardName:"Enter New Card Name..."});
         }
       }
     });
@@ -135,7 +148,7 @@ export default function Columns() {
               <Cards
                 cardDetails={item}
                 key={index}
-                handleCardChange={handleCardChange}
+                handleCardChange={(e)=>handleCardChange(item ,e)}
               />
             ))}
           </div>
