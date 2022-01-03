@@ -62,6 +62,16 @@ export default function Columns() {
     setColumns({ ...datAfterSave });
     localStorage.setItem("initialColumns", JSON.stringify(datAfterSave));
   };
+  const handleClearLocalStorage = () =>{
+    localStorage.clear();
+    if (initialColumns) {
+      setColumns(
+        JSON.parse(localStorage.getItem("initialColumns"))
+          ? JSON.parse(localStorage.getItem("initialColumns"))
+          : initialColumns
+      );
+    }
+  }
   const handleAddColumn = (evt) => {
     let totalColumns = "column" + (Object.keys(columns).length + 1);
     console.log(columns);
@@ -170,8 +180,11 @@ export default function Columns() {
 
   return (
     <>
-      <div onClick={(evt) => handleAddColumn(evt)}>
+      <div onClick={(evt) => handleAddColumn(evt)} className="addAColButton">
         <Button name={"Add a column"} />
+      </div>
+      <div onClick={handleClearLocalStorage} className="localStorageButton">
+        <Button name={"Clear Local Storage"} />
       </div>
       <div className="row">
         {Object.values(
@@ -195,12 +208,14 @@ export default function Columns() {
                 <span>
                   <button onClick={() => handleSave(col.id)}>Save</button>
                 </span>
+                <span className="deleteCol" title="Delete this column." onClick={() => deleteACol(col)}>X</span>
               </>
             ) : (
               <>
-                <div className="columnName">{col && col.id}</div>
-                <u onClick={() => addAcard(col)}>Add a card...</u>
-                <span onClick={() => deleteACol(col)}>Delete this column</span>
+                <span className="columnName">{col && col.id}</span>
+                <span className="deleteCol" title="Delete this column." onClick={() => deleteACol(col)}>X</span>
+
+               <div className="addACard"><u onClick={() => addAcard(col)}>Add a card...</u></div> 
               </>
             )}
             {col.list.map((item, index) => (

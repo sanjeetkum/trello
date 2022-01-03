@@ -1,31 +1,53 @@
+.column {
+  float: left;
+  width: 25%;
+  padding: 15px;
+  background-color: antiquewhite;
+  margin: 15px;
+  min-height: 400px;
+}
+.addAColButton{
+  max-width: 250px;
+}
+.localStorageButton{
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 
+.row {
+  margin: 0 -5px;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (max-width: 600px) {
   .column {
-    float: left;
-    width: 25%;
-    padding: 15px;
-    background-color: antiquewhite;
-    margin: 15px;
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
   }
-  
-  .row {margin: 0 -5px;}
-  
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  
-  @media screen and (max-width: 600px) {
-    .column {
-      width: 100%;
-      display: block;
-      margin-bottom: 20px;
-    }
-  }
+}
 
-  .columnName{
-    font-size: 18px;
-    font-weight: bold;
-    margin: auto;
-  }
-  
+.columnName {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 25px;
+  margin-bottom: 25px;
+}
+.addACard{
+  cursor: pointer;
+  font-size: 14px;
+  color: green;
+  margin-top: 20px;
+}
+.deleteCol {
+  color: red;
+  cursor: pointer;
+  float: right;
+  font-weight: bolder;
+}
