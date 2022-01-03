@@ -1,4 +1,4 @@
-#Poject functionality
+# Project functionality
 
 "Add a column" button on top will add a new column.
 
