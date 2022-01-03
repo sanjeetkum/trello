@@ -21,6 +21,8 @@ export default function Columns() {
     },
   };
   const [columns, setColumns] = useState(initialColumns);
+  const [filteredArray, setFilteredArray] = useState([]);
+  const [colName , setColName] = useState("");
 
   useEffect(() => {
     if (initialColumns) {
@@ -31,6 +33,25 @@ export default function Columns() {
       );
     }
   }, []);
+
+  useEffect(()=>{
+    if (filteredArray && filteredArray.length > 0) {
+      Object.values(
+        columns ? columns : JSON.parse(localStorage.getItem("initialColumns"))
+      ).map((item) => {
+        if (item.id === colName) {
+          console.log("item.list", filteredArray);
+  
+          item.list = [...item.list, ...filteredArray];
+       }
+      });
+      setColumns({ ...columns });
+      localStorage.setItem("initialColumns", JSON.stringify(columns));
+      
+
+      console.log("item", filteredArray);
+    }
+  }, [filteredArray])
 
   const [columnName, setColumnName] = useState("");
   // const [cardName, setCardName] = useState("");
@@ -71,42 +92,68 @@ export default function Columns() {
     });
   };
 
-  const handleCardChange = (item ,evt) => {
-    console.log(item)
+  const handleCardChange = (item, evt) => {
+    console.log(item);
     const value = evt.target.value;
     // setCardName({
     //   ...cardName,
     //   [evt.target.name]: value,
     // });
     Object.values(
-      columns ? columns:
-      JSON.parse(localStorage.getItem("initialColumns"))
+      columns ? columns : JSON.parse(localStorage.getItem("initialColumns"))
     ).map((col) => {
-     col && col.list.map((listItem)=>{
-      if(listItem.id === item.id){
-        listItem.cardName =  value;
-      }
-     })
+      col &&
+        col.list.map((listItem) => {
+          if (listItem.id === item.id) {
+            listItem.cardName = value;
+          }
+        });
     });
-    setColumns({ ...columns});
+    setColumns({ ...columns });
     localStorage.setItem("initialColumns", JSON.stringify(columns));
+  };
+  const handleMoveTo = (e, cardId) => {
+    Object.values(
+      columns ? columns : JSON.parse(localStorage.getItem("initialColumns"))
+    ).map((item) => {
+      item.list.map((card) => {
+        let filteredArray2 = [];
 
+        if (cardId === card.id) {
+          if (item.id !== e.target.value) {
+            const filteredArray1 = item.list.filter((a) => a.id !== cardId);
+            filteredArray2 = item.list.filter((a) => a.id === cardId);
+            if (filteredArray2) {
+              setFilteredArray(filteredArray2);
+              setColName(e.target.value)
+            }
+            item.list = filteredArray1;
+          }
+        }
+     
+      });
+    });
+
+    setColumns({ ...columns });
+    localStorage.setItem("initialColumns", JSON.stringify(columns));
   };
 
   const addAcard = (col, index) => {
     Object.values(
-      columns ? columns:
-      JSON.parse(localStorage.getItem("initialColumns"))
+      columns ? columns : JSON.parse(localStorage.getItem("initialColumns"))
     ).map((item) => {
       if (item.id === col.id) {
         if (item.list) {
-          item.list.splice((item.list.length), 0, {id:`${item.id}${item.list.length+1}`,cardName:"Enter New Card Name..."});
+          item.list.splice(item.list.length, 0, {
+            id: `${item.id}${item.list.length + 1}`,
+            cardName: "Enter New Card Name...",
+          });
         }
       }
     });
     console.log("item2222", columns);
 
-    setColumns({ ...columns});
+    setColumns({ ...columns });
     localStorage.setItem("initialColumns", JSON.stringify(columns));
   };
 
@@ -148,7 +195,15 @@ export default function Columns() {
               <Cards
                 cardDetails={item}
                 key={index}
-                handleCardChange={(e)=>handleCardChange(item ,e)}
+                handleCardChange={(e) => handleCardChange(item, e)}
+                handleMoveTo={(e, cardId) => handleMoveTo(e, cardId)}
+                columns={
+                  JSON.parse(localStorage.getItem("initialColumns"))
+                    ? Object.values(
+                        JSON.parse(localStorage.getItem("initialColumns"))
+                      )
+                    : Object.values(columns)
+                }
               />
             ))}
           </div>
