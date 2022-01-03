@@ -1,5 +1,4 @@
 
-  /* Float four columns side by side */
   .column {
     float: left;
     width: 25%;
@@ -8,17 +7,14 @@
     margin: 15px;
   }
   
-  /* Remove extra left and right margins, due to padding */
   .row {margin: 0 -5px;}
   
-  /* Clear floats after the columns */
   .row:after {
     content: "";
     display: table;
     clear: both;
   }
   
-  /* Responsive columns */
   @media screen and (max-width: 600px) {
     .column {
       width: 100%;

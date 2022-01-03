@@ -54,24 +54,13 @@ export default function Columns() {
   }, [filteredArray])
 
   const [columnName, setColumnName] = useState("");
-  // const [cardName, setCardName] = useState("");
 
   const handleSave = (colId) => {
-    // console.log(columnName[id]);
     localStorage.setItem(colId, JSON.stringify(columns[colId]));
     let datAfterSave = JSON.parse(localStorage.initialColumns);
-    // JSON.parse(JSON.parse(datAfterSave))[colId] = columnName[colId];
-    // delete Object.assign(datAfterSave, {[columnName[colId]]: datAfterSave[datAfterSave[colId]] })[datAfterSave[colId]];
     datAfterSave[colId].id = columnName[colId];
-    console.log(datAfterSave);
     setColumns({ ...datAfterSave });
-
     localStorage.setItem("initialColumns", JSON.stringify(datAfterSave));
-
-    //console.log(columnName[colId])
-
-    // console.log(JSON.parse(JSON.parse(JSON.parse(localStorage.getItem("initialColumns")))))
-    // datAfterSave[id].id = JSON.stringify(columns[id])
   };
   const handleAddColumn = (evt) => {
     let totalColumns = "column" + (Object.keys(columns).length + 1);
@@ -93,12 +82,9 @@ export default function Columns() {
   };
 
   const handleCardChange = (item, evt) => {
-    console.log(item);
+    console.log("item is ===>",item);
     const value = evt.target.value;
-    // setCardName({
-    //   ...cardName,
-    //   [evt.target.name]: value,
-    // });
+  
     Object.values(
       columns ? columns : JSON.parse(localStorage.getItem("initialColumns"))
     ).map((col) => {
@@ -146,7 +132,7 @@ export default function Columns() {
         if (item.list) {
           item.list.splice(item.list.length, 0, {
             id: `${item.id}${item.list.length + 1}`,
-            cardName: "Enter New Card Name...",
+            cardName: "New card Description here...",
           });
         }
       }
@@ -156,6 +142,31 @@ export default function Columns() {
     setColumns({ ...columns });
     localStorage.setItem("initialColumns", JSON.stringify(columns));
   };
+  const deleteACol = (col) => {
+   const filterCol = Object.values(columns).filter((colList) =>colList.id !== col.id)
+    
+    console.log("item2222", filterCol);
+
+    setColumns({ ...filterCol });
+    localStorage.setItem("initialColumns", JSON.stringify(filterCol));
+  };
+  const handleBlur = (e) =>{
+    if(e.target.value!==""){
+      Object.values(
+        JSON.parse(localStorage.getItem("initialColumns"))
+          ? JSON.parse(localStorage.getItem("initialColumns"))
+          : columns
+      ).map((col, index) => {
+        col.list.map((item, index) => {
+          item.cardName =  e.target.value;
+        })
+      })
+      return true
+    }
+    setColumns({ ...columns });
+    localStorage.setItem("initialColumns", JSON.stringify(columns));
+    return false
+  }
 
   return (
     <>
@@ -189,6 +200,7 @@ export default function Columns() {
               <>
                 <div className="columnName">{col && col.id}</div>
                 <u onClick={() => addAcard(col)}>Add a card...</u>
+                <span onClick={() => deleteACol(col)}>Delete this column</span>
               </>
             )}
             {col.list.map((item, index) => (
@@ -197,6 +209,7 @@ export default function Columns() {
                 key={index}
                 handleCardChange={(e) => handleCardChange(item, e)}
                 handleMoveTo={(e, cardId) => handleMoveTo(e, cardId)}
+                handleBlur={(e)=>handleBlur(e)}
                 columns={
                   JSON.parse(localStorage.getItem("initialColumns"))
                     ? Object.values(
